@@ -64,8 +64,8 @@ class User extends Authenticatable {
 
         try {
             self::sendSms($receiverNumber, $message);
-        } catch (Exception $e) {
-            $this->info("Error: " . $e->getMessage());
+        } catch (ConfigurationException $e) {
+            echo $e->getMessage();
         }
     }
 
@@ -92,7 +92,11 @@ class User extends Authenticatable {
         $client = new Client($account_sid, $auth_token);
         $message = $client->messages->create(
             $to,
-            ['from' => $twilio_number, 'body' =>  $text]
+            [
+                'from' => $twilio_number,
+                'body' => $text,
+            ]
         );
+        return $message;
     }
 }
